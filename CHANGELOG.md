@@ -1,4 +1,44 @@
 # k8s-cms Changelog
+## Version 0.3.0 - Nov 01, 2019
+### Added
+- checksum configmaps and secrets to restart pods on updates
+- Quality of Service
+    - profiling resource usage for simulated workload (48 particpants/1 submission per 60s)
+    - limit worker resources to ensure quality of service.
+    - set limits and requests for pods in kubernetes
+- securing k8s-cms:
+    - HTTPs for RankingWebServer,AdminWebServer,ContestWebServer.
+        - setup cert manager chart to use lets encrypt to obtain certificates 
+- autoscaling for contest web servers and workers to handle the load
+- node taints & selector to control pod scheduling 
+
+### Changed
+- migrate kubernetes yaml to helm v2
+    - config maps:
+        - cms-config-env
+        - cms-config
+    - secrets
+        - cms-secrets
+    - Database service and depolyment
+    - LogService service and deployment
+    - ResourceService service and deployment
+    - ScoringService service and deployment
+    - EvaluationService service and deployment
+    - ProxyService service and deployment
+    - AdminWebServer service and deployment
+    - PrintingService service and deployment
+    - RankingWebServer service and deployment
+    - Checker service and deployment
+    - ContestWebServer service and deployment
+    - Worker service and deployment
+
+### Removed
+- remove support for kustomize under k8s/
+
+## Version 0.2.3 beta - Unreleased
+### Changed
+- fixed issue where cms entrypoint did not drop permssions correctly
+
 ## Version 0.2.2 beta - 2019-10-07
 ### Changed
 - fixed images deployed using kustomize tagged 'latest' instead of 'v0.2.1b'

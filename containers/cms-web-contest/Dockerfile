@@ -3,7 +3,7 @@
 # Contest Web Server Container
 # 
 
-FROM mrzzy/cms-base:0.2.1b
+FROM /cms-base:0.3.0b
 
 # copy container source
 COPY containers/cms-web-contest /scripts
@@ -16,4 +16,5 @@ COPY config /cms/config
 # run contest web server
 EXPOSE 21000
 EXPOSE 8888
-CMD /scripts/web-contest-entrypoint.sh
+ENTRYPOINT ["/scripts/cms-entrypoint.sh", "/scripts/web-contest-entrypoint.sh"]
+CMD [ "cmsContestWebServer" ]

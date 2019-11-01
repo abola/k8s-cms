@@ -1,0 +1,50 @@
+#
+# k8s-cms
+# Kubenetes Intergration
+# Ingress
+# 
+{{- if .Values.ingress.enabled }}
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ include "k8s-cms.fullname" . }}
+  labels:
+{{ include "k8s-cms.labels" . | indent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end -}}
+    {{- if .Values.certGenerate.enabled -}}
+    {{- if ne .Values.environment "production" -}}
+    certmanager.k8s.io/issuer: {{ .Release.Name }}-letsencrypt-staging
+    {{- else -}}
+    certmanager.k8s.io/issuer: {{ .Release.Name }}-letsencrypt-production
+    {{- end }}
+    {{- end }}
+spec:
+{{- if .Values.ingress.tls }}
+  tls:
+  {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}  
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- $serviceName := .serviceName }}
+        {{- range .paths }}
+          - path: {{ . }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: 80
+        {{- end }}
+  {{- end }}
+
+{{- end }}

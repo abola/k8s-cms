@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libcups2-dev \
     gettext-base \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # configure user/groups
 RUN useradd --user-group --home-dir /project cmsuser
@@ -39,5 +39,6 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 RUN cp /scripts/setup_db.sh /docker-entrypoint-initdb.d/
 
 # configure entrypoint script
-ENTRYPOINT ["/scripts/cms-entrypoint.sh", "docker-entrypoint.sh"]
-CMD ["postgres"]
+ENV CMS_DB=0.0.0.0
+ENTRYPOINT ["/scripts/cms-entrypoint.sh"]
+CMD [ "docker-entrypoint.sh", "postgres" ]

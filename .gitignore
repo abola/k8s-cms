@@ -4,3 +4,7 @@ tags*
 .env
 # vim sessions
 .session.vim
+# dependency helm charts
+charts/
+# ccls cache
+.ccls-cache/
